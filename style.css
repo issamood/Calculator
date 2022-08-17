@@ -1,0 +1,22 @@
+.body{
+    display:flex;
+    flex-flow: column wrap;
+}
+
+.display {
+    display: flex;
+    font-size: 50px;
+    justify-content: flex-end;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+}
+
+button {
+    height: 100px;
+    width: 100px;
+}
+
