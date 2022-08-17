@@ -9,6 +9,13 @@
     justify-content: flex-end;
 }
 
+.smallDisplay {
+    display: flex;
+    font-size: 25px;
+    color: grey;
+    justify-content: flex-end;
+}
+
 .buttonContainer{
     display: flex;
     flex-wrap: wrap;

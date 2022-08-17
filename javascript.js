@@ -99,8 +99,12 @@ const equalBtn = document.querySelector('.equalBtn');
 const backspaceBtn = document.querySelector('.backspaceBtn');
 const clearBtn = document.querySelector('clearBtn');
 const display = document.querySelector('.display');
+const smallDisplay = document.querySelector('.smallDisplay')
 
 let displayNumber = "0"
+let smallDisplayNumber = ""
+let total = 0;
+
 function addComma(number){
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -115,12 +119,16 @@ zeroBtn.addEventListener('click', ()=>{
 function updateNumber(number){
     if (displayNumber === "0"){
         displayNumber = number;
-        display.textContent = addComma(displayNumber);
     }
     else {
         displayNumber = displayNumber.concat(number);
-        display.textContent = addComma(displayNumber);
     }
+    display.textContent = addComma(displayNumber);
+}
+
+function convertToNumber(number){
+    let integer = number.replaceAll(',', '')
+    return parseInt(integer);
 }
 
 oneBtn.addEventListener('click', () => updateNumber("1"));
@@ -132,3 +140,20 @@ sixBtn.addEventListener('click', () => updateNumber("6"));
 sevenBtn.addEventListener('click', () => updateNumber("7"));
 eightBtn.addEventListener('click', () => updateNumber("8"));
 nineBtn.addEventListener('click', () => updateNumber("9"));
+
+
+addBtn.addEventListener('click', () => {
+    if (displayNumber === ""){
+        smallDisplay.textContent = addComma(total.toString()) + ' + ';
+    }
+    else if (smallDisplayNumber === ""){
+        smallDisplayNumber = displayNumber;
+        total = convertToNumber(smallDisplayNumber)
+    }
+    else {
+        total += convertToNumber(displayNumber);
+    }
+    smallDisplay.textContent = addComma(total.toString()) + ' + ';
+    displayNumber = "";
+
+})
