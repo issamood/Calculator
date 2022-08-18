@@ -64,23 +64,6 @@ function divide(a, b){
     return (a / b);
 }
 
-function operate(operator, a, b){
-    switch (operator){
-        case "add":
-            return add(a,b);
-            break;
-        case "subtract":
-            return subtract(a,b);
-            break;
-        case "multiply":
-            return multiply(a,b);
-            break;
-        case "divide":
-            return divide(a,b);
-            break;
-    }
-}
-
 const addBtn = document.querySelector('.addBtn');
 const subtractBtn = document.querySelector('.subtractBtn');
 const multiplyBtn = document.querySelector('.multiplyBtn');
@@ -141,19 +124,47 @@ sevenBtn.addEventListener('click', () => updateNumber("7"));
 eightBtn.addEventListener('click', () => updateNumber("8"));
 nineBtn.addEventListener('click', () => updateNumber("9"));
 
-
-addBtn.addEventListener('click', () => {
+function operate(operator){
     if (displayNumber === ""){
-        smallDisplay.textContent = addComma(total.toString()) + ' + ';
+        smallDisplay.textContent = addComma(total.toString()) + ` ${operator} `;
     }
     else if (smallDisplayNumber === ""){
         smallDisplayNumber = displayNumber;
         total = convertToNumber(smallDisplayNumber)
     }
     else {
-        total += convertToNumber(displayNumber);
+        switch (operator){
+            case "+":
+                total += convertToNumber(displayNumber);
+                break;
+            case "-":
+                total -= convertToNumber(displayNumber);
+                break;
+            case "*":
+                total = total * convertToNumber(displayNumber);
+                break;
+            case "/":
+                total = total / convertToNumber(displayNumber);
+                break;
+        }
     }
-    smallDisplay.textContent = addComma(total.toString()) + ' + ';
+    smallDisplay.textContent = addComma(total.toString()) + ` ${operator} `;
     displayNumber = "";
+}
 
+
+addBtn.addEventListener('click', () => {
+    return operate('+');
+})
+
+subtractBtn.addEventListener('click', () => {
+    return operate('-');
+})
+
+multiplyBtn.addEventListener('click', () => {
+    return operate('*');
+})
+
+divideBtn.addEventListener('click', () => {
+    return operate('/');
 })
