@@ -4,32 +4,6 @@ subtract function
 multiply function
 divide function
 
-create function named operate that takes an operator
-and 2 numbers and calls one of the above functions on the numbers.
-
-create a basic html calculator with buttons for each digit
-each of the above functions and an 'equals' key
-
-create display for calculator
-
-create 'clear' button
-
-create functions that populate the display when you click the
-numbers buttons. You should be storing the display value
-in a variable somewhere for use in the next step
-
-Make the calculator work, You need to store the first number that is
-input into the calculator when a user presses an operator and also
-save which operation has been chosen and then operate() on them
-when the user presses the equals key
-
-At this point i should have code that can populate the display
-so when operate has been called, the display is updated with 
-the solution to the operation
-
-hardest part of the project, figure out how to store all the values
-and call the operate function with them.
-
 should not be evaluating more than a single pair of numbers at a time
 round answers with long decimals so it doesnt overflow the screen
 pressing '=' before entering all of the numbers or an operator
@@ -48,22 +22,7 @@ make it look nice!
 
 */
 
-function add(a, b){
-    return a+b;
-}
-
-function subtract(a, b){
-    return a-b;
-}
-
-function multiply(a, b){
-    return a*b;
-}
-
-function divide(a, b){
-    return (a / b);
-}
-
+//Selecting the buttons, could've used querySelectorAll and use IDs instead, but just focusing on getting the calculator to function
 const addBtn = document.querySelector('.addBtn');
 const subtractBtn = document.querySelector('.subtractBtn');
 const multiplyBtn = document.querySelector('.multiplyBtn');
@@ -80,13 +39,17 @@ const eightBtn = document.querySelector('.eightBtn');
 const nineBtn = document.querySelector('.nineBtn');
 const equalBtn = document.querySelector('.equalBtn');
 const backspaceBtn = document.querySelector('.backspaceBtn');
-const clearBtn = document.querySelector('clearBtn');
+const clearBtn = document.querySelector('.clearBtn');
 const display = document.querySelector('.display');
 const smallDisplay = document.querySelector('.smallDisplay')
 
 let displayNumber = "0"
 let smallDisplayNumber = ""
 let total = 0;
+let currentOperator = "";
+let temp = 0;
+let tempB = "";
+let fromEquals = false;
 
 function addComma(number){
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -100,6 +63,13 @@ zeroBtn.addEventListener('click', ()=>{
 })
 
 function updateNumber(number){
+    if ((smallDisplay.textContent).match("=")){
+        smallDisplay.textContent = "";
+        tempB = displayNumber;
+        displayNumber = ""
+        fromEquals = true;
+    }
+
     if (displayNumber === "0"){
         displayNumber = number;
     }
@@ -125,6 +95,7 @@ eightBtn.addEventListener('click', () => updateNumber("8"));
 nineBtn.addEventListener('click', () => updateNumber("9"));
 
 function operate(operator){
+    currentOperator = operator
     if (displayNumber === ""){
         smallDisplay.textContent = addComma(total.toString()) + ` ${operator} `;
     }
@@ -147,24 +118,75 @@ function operate(operator){
                 total = total / convertToNumber(displayNumber);
                 break;
         }
+
     }
+    
+    display.textContent = addComma(total.toString());
     smallDisplay.textContent = addComma(total.toString()) + ` ${operator} `;
     displayNumber = "";
 }
 
 
-addBtn.addEventListener('click', () => {
-    return operate('+');
+addBtn.addEventListener('click', () => operate("+"));
+
+subtractBtn.addEventListener('click', () => operate("-"));
+
+multiplyBtn.addEventListener('click', () => operate("*"));
+
+divideBtn.addEventListener('click', () => operate("/"));
+
+backspaceBtn.addEventListener('click', () => {
+    if (displayNumber.length === 1){
+        displayNumber = "0"
+        display.textContent = displayNumber;
+    }
+    else {
+        displayNumber = displayNumber.replace(displayNumber.charAt(displayNumber.length - 1), '')
+        display.textContent = addComma(displayNumber);
+    }
 })
 
-subtractBtn.addEventListener('click', () => {
-    return operate('-');
-})
+clearBtn.addEventListener('click', () => {
+    displayNumber = "0"
+    smallDisplayNumber = ""
+    total = 0;
+    currentOperator = "";
+    temp = 0;
+    tempB = "";
+    fromEquals = false;
 
-multiplyBtn.addEventListener('click', () => {
-    return operate('*');
-})
+    display.textContent = displayNumber;
+    smallDisplay.textContent = "";
+});
 
-divideBtn.addEventListener('click', () => {
-    return operate('/');
+equalBtn.addEventListener('click', () => {
+    if (fromEquals){
+        temp = convertToNumber(displayNumber);
+        displayNumber = tempB;
+    } else {
+        temp = total;
+    }
+
+    if (currentOperator === "+"){
+        total = temp + convertToNumber(displayNumber);
+        smallDisplay.textContent = `${addComma(temp)} ${currentOperator} ${addComma(displayNumber)} =`
+        display.textContent = total.toString();
+    }
+    else if (currentOperator === "-"){
+        total = temp - convertToNumber(displayNumber);
+        smallDisplay.textContent = `${addComma(temp)} ${currentOperator} ${addComma(displayNumber)} =`
+        display.textContent = total.toString();
+    }
+    else if (currentOperator === "*"){
+        total = temp * convertToNumber(displayNumber);
+        smallDisplay.textContent = `${addComma(temp)} ${currentOperator} ${addComma(displayNumber)} =`
+        display.textContent = total.toString();
+    }
+    else if (currentOperator === "/"){
+        total = temp / convertToNumber(displayNumber);
+        smallDisplay.textContent = `${addComma(temp)} ${currentOperator} ${addComma(displayNumber)} =`
+        display.textContent = total.toString();
+    }
+
+    fromEquals = false;
 })
